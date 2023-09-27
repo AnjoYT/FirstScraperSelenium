@@ -9,16 +9,15 @@ internal class Program
 		IWebDriver driver = new ChromeDriver();
 		driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
 		driver.Navigate().GoToUrl("http://books.toscrape.com/index.html?");
-		IReadOnlyList<IWebElement> title = driver.FindElements(By.XPath("//article[@class='product_pod']/child::h3"));
+		IReadOnlyList<IWebElement> title = driver.FindElements(By.XPath("//li[@class='col-xs-6 col-sm-4 col-md-3 col-lg-3']//h3//a"));
 		List<Item> data = new List<Item>();
 		foreach (IWebElement element in title)
 		{
-			Console.WriteLine(element.Text);
 			element.Click();
-			var titleName = driver.FindElement(By.ClassName("product_main"));
+			var titleName = driver.FindElement(By.XPath("//div[@class='col-sm-6 product_main']/child::h1"));
 			var productDescription = driver.FindElement(By.XPath("//div[@id='product_description']/following-sibling::p"));
-			Console.WriteLine(titleName.Text);
-			Console.WriteLine(productDescription.Text);
+			//Console.WriteLine(titleName.Text);
+			//Console.WriteLine(productDescription.Text);
 
 			data.Add(new Item() { Title = titleName.Text, ProductDescription = productDescription.Text });
 			driver.Navigate().Back();
@@ -27,6 +26,8 @@ internal class Program
 		{
 			Console.WriteLine(element);
 		}
+		Console.WriteLine(data.Count);
+
 	}
 }
 /*
@@ -50,6 +51,6 @@ public class Item
 	public string ProductDescription { get; set; }
 	public override string ToString()
 	{
-		return "Title: "+Title+"Product Description: \b"+ProductDescription;
+		return "Title: "+Title+"\n\nProduct Description: \n"+ProductDescription+"\n";
 	}
 }
