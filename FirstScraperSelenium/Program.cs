@@ -7,20 +7,23 @@ internal class Program
 	private static void Main(string[] args)
 	{
 		IWebDriver driver = new ChromeDriver();
-		driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
+		driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(60);
 		driver.Navigate().GoToUrl("http://books.toscrape.com/index.html?");
 		IReadOnlyList<IWebElement> title = driver.FindElements(By.XPath("//li[@class='col-xs-6 col-sm-4 col-md-3 col-lg-3']//h3//a"));
 		List<Item> data = new List<Item>();
 		foreach (IWebElement element in title)
 		{
+			Thread.Sleep(1000);
 			element.Click();
 			var titleName = driver.FindElement(By.XPath("//div[@class='col-sm-6 product_main']/child::h1"));
 			var productDescription = driver.FindElement(By.XPath("//div[@id='product_description']/following-sibling::p"));
+			Thread.Sleep(1000);
 			//Console.WriteLine(titleName.Text);
 			//Console.WriteLine(productDescription.Text);
 
 			data.Add(new Item() { Title = titleName.Text, ProductDescription = productDescription.Text });
 			driver.Navigate().Back();
+			Thread.Sleep(1000);
 		}
 		foreach(Item element in data)
 		{
